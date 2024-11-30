@@ -55,5 +55,20 @@ stages {
             }
 
         }
+        stage('Deploy to Kubernetes') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    def namespaces = ['dev', 'qa', 'staging', 'prod']
+                    namespaces.each { ns ->
+                        sh """
+                        kubectl apply -f ~/Jenkins_devops_exams -n ${ns}
+                        """
+                    }
+                }
+            }
+        }
     }
 }
